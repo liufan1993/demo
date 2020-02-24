@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+
+    <!--控制台日志-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                <!-- 输出格式，可以PatternLayout类找相关配置 -->
+                %d - %C - %M - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!-- 日志文件info-->
+    <appender name="fileInfo" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤掉errorr日志，其他通过：onMatch=DENY禁止，onMismatch=ACCEPT通过 -->
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                %d - %C - %M - %msg%n
+            </pattern>
+        </encoder>
+        <!-- 滚动策略，每天生成一个文件，方便ELK系统收集及分析问题-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件路径 -->
+            <fileNamePattern>D:/1/fileInfo.%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <!-- 日志文件error-->
+    <appender name="fileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 只允许error日志通过 -->
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %d - %C - %M - %msg%n
+            </pattern>
+        </encoder>
+        <!-- 滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件路径 -->
+            <fileNamePattern>D:/1/fileError.%d.log</fileNamePattern>
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- 全局日志拦截，级别info -->
+    <root level="info">
+        <appender-ref ref="console" />
+        <appender-ref ref="fileInfo" />
+        <appender-ref ref="fileError" />
+    </root>
+</configuration>
